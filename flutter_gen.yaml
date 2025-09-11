@@ -1,0 +1,4 @@
+flutter_gen:
+  fonts:
+    enabled: true
+  output: lib/gen/
