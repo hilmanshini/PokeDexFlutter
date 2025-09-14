@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pokemon2/service/model/pokemon_model.dart';
+import 'package:pokemon2/utils/ext.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../gen/assets.gen.dart';
@@ -23,7 +24,7 @@ class PokemonHomeScreenCard extends StatelessWidget {
           child: Stack(
             children: [
               BottomRightAsset(),
-              Title(title: item.name ?? ""),
+              Title(title: item.name?.capitalize() ?? ""),
               PokeImage(item),
               TypeChips(type: item.types,),
             ],
@@ -43,12 +44,12 @@ class PokeImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Positioned(
-    bottom: 10,
-    right: 10,
+    bottom: 0.dpValue(context),
+    right: 0.dpValue(context),
     child: Visibility(visible: item.imagePath != null, child: Container(
-      width: 40.w.clamp(50, 200),
-      height: 40.w.clamp(50, 200),
-      child: Image.network( item.imagePath!,fit: BoxFit.fill,width: 900,height: 900),
+      width: context.isPortrait ? 240.dpValue(context): 440.dpValue(context),
+      height: context.isPortrait ? 240.dpValue(context):440.dpValue(context),
+      child: Image.network( item.imagePath!,fit: BoxFit.fill,width: 300.dpValue(context),height: 300.dpValue(context)),
     )),
   );
 }
@@ -60,14 +61,17 @@ class Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Positioned(
-    top: 2.h,
-    left: 3.w,
-    child: Text(
-      title,
-      style: TextStyle(
-        fontFamily: "Larsseit",
-        fontSize: 4.w.clamp(20, 40),
-        color: Colors.white,
+    top: 22.dpValue(context),
+    left: 22.dpValue(context),
+    child: Container(
+      height: 65.dpValue(context),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontFamily: "Larsseit",
+          fontSize: 44.dpValue(context),
+          color: Colors.white,
+        ),
       ),
     ),
   );
@@ -94,17 +98,19 @@ class TypeChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Positioned(
-    top: 8.h.clamp(40, 200),
-    left: 3.w,
+    top: 87.dpValue(context),
+    left: 22.dpValue(context),
     child: Container(
       constraints: BoxConstraints(
-        maxWidth: 30.w, // maksimal 30.w
+        maxWidth: 40.w,
+        maxHeight: 60.dpValue(context)
       ),
       alignment: Alignment.centerLeft,
       child: ListView.separated(
         shrinkWrap: true,
         itemCount: type.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 10),
+        scrollDirection: Axis.horizontal,
+        separatorBuilder: (context, index) => const SizedBox(height: 10,width: 5,),
         itemBuilder: (context, index) {
           return Align(alignment: Alignment.centerLeft, child: TypeChip(type[index]));
         },
@@ -120,8 +126,8 @@ class TypeChip extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Container(
-      width:9.w,
-      padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 0.8.h),
+      width:0.4.dp,
+      padding: EdgeInsets.symmetric( vertical: 0.2.h),
 
       decoration: BoxDecoration(
         color: Color(0x33ffffff), // transparent background
@@ -129,10 +135,10 @@ class TypeChip extends StatelessWidget {
         border: Border.all(color: Color(0x33ffffff).withAlpha(150), width: 0),
       ),
       child: Text(
-        type.toUpperCase(),
+        type.capitalize(),
         style: TextStyle(
           color: Colors.white.withAlpha(200), // label color
-          fontSize: 11.sp,
+          fontSize: context.isWidthLess(800) ? 8:18,
           fontWeight: FontWeight.w600,
         ),
         textAlign:  TextAlign.center,

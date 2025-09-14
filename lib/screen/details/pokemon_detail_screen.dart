@@ -6,6 +6,7 @@ import 'package:pokemon2/screen/details/pokemon_about_tab.dart';
 import 'package:pokemon2/screen/details/pokemon_base_stats_tab.dart';
 import 'package:pokemon2/screen/details/pokemon_evolution_tab.dart';
 import 'package:pokemon2/service/model/pokemon_model.dart';
+import 'package:pokemon2/utils/ext.dart';
 import 'package:sizer/sizer.dart';
 
 class PokemonDetailScreen extends StatelessWidget {
@@ -61,23 +62,25 @@ class PokemonDetailScreenAppBar extends AppBar {
         actions: appbarActions(context),
       ) {}
 
-  static Widget? appbarLeading(BuildContext context) => Padding(
-    padding: EdgeInsetsGeometry.only(left: 3.w, top: 2.5.h),
-    child: IconButton(
-      icon: Icon(Icons.arrow_back, color: Colors.white),
-      onPressed: () {
+  static Widget? appbarLeading(BuildContext context) => SizedBox(
+    width: 40.dpValue(context),
+    height: 40.dpValue(context),
+    child: InkWell(
+
+      child: Icon(Icons.arrow_back, color: Colors.white,size: 40.dpValue(context),),
+      onTap: () {
         Navigator.pop(context); // kembali ke halaman sebelumnya
       },
     ),
   );
 
   static List<Widget> appbarActions(BuildContext context) => [
-    Padding(
-      padding: EdgeInsetsGeometry.only(right: 5.w, top: 2.5.h),
-      child: InkWell(child: Icon(Icons.favorite_outline, color: Colors.white),onTap: () {
-        context.pop();
-      }),
-    ),
+    // Padding(
+    //   padding: EdgeInsetsGeometry.only(right: 5.w, top: 2.5.h),
+    //   child: InkWell(child: Icon(Icons.favorite_outline, color: Colors.white),onTap: () {
+    //     context.pop();
+    //   }),
+    // ),
   ];
 }
 
@@ -91,7 +94,7 @@ class Title extends StatelessWidget {
     top: 1.h,
     left: 4.w,
     child: Text(
-      model.name!,
+      model.name!.capitalize(),
       style: TextStyle(
         fontFamily: "Larsseit",
         fontSize: 5.h,
@@ -109,26 +112,23 @@ class TypeChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Positioned(
-    top: 7.h,
-    left: 5.w,
+    top: 8.h,
+    left: context.isPortrait? 5.w : 4.w,
     // left: 3.w,
-    child: PreferredSize(
-      preferredSize: Size(double.infinity, 6.h),
-      child: Container(
-        // color: Colors.green,
-        constraints: BoxConstraints(
-          maxHeight: 6.h, // maksimal 30.w
-        ),
-        alignment: Alignment.centerLeft,
-        child: ListView.separated(
-          shrinkWrap: true,
-          itemCount: model.types.length,
-          scrollDirection: Axis.horizontal,
-          separatorBuilder: (context, index) => const SizedBox(width: 5),
-          itemBuilder: (context, index) {
-            return Align(alignment: Alignment.centerLeft, child: TypeChip(model.types[index]));
-          },
-        ),
+    child: Container(
+      constraints: BoxConstraints(
+        maxHeight: 5.h, // maksimal 30.w
+          maxWidth: 40.w
+      ),
+      alignment: Alignment.centerLeft,
+      child: ListView.separated(
+        shrinkWrap: true,
+        itemCount: model.types.length,
+        scrollDirection: Axis.horizontal,
+        separatorBuilder: (context, index) => const SizedBox(width: 5),
+        itemBuilder: (context, index) {
+          return Align(alignment: Alignment.centerLeft, child: TypeChip(model.types[index]));
+        },
       ),
     ),
   );
@@ -143,7 +143,7 @@ class TypeChip extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Container(
-      width:9.w,
+      width:15.w,
       padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 0.8.h),
 
       decoration: BoxDecoration(
@@ -170,11 +170,11 @@ class BottomCardBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Positioned(
-    top: 35.h,
+    top: context.isPortrait ? 35.h : 35.h,
     left: 0,
     child: SizedBox(
-      height: 55.h,
-      width: 100.w,
+      height: context.isPortrait? 55.h : 55.h,
+      width: context.isPortrait?100.w : 100.w,
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.only(topLeft: Radius.circular(20),topRight: Radius.circular(20))),
         color: Colors.white,
@@ -241,14 +241,15 @@ class BottomCardTabBar extends StatelessWidget {
 }
 
 class IdText extends StatelessWidget {
-  const IdText(PokemonModel model, {super.key});
+  PokemonModel model;
+  IdText(this.model, {super.key});
 
   @override
   Widget build(BuildContext context) => Positioned(
     right: 6.w,
     top: 5.w.clamp(50, double.infinity),
     child: Text(
-      "#01",
+      "#${model.id}",
       style: TextStyle(
         fontFamily: "Larsseit",
         // fontStyle: FontStyle.italic,
@@ -267,13 +268,16 @@ class PokeImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Align(
-    // top: 15.h,
-    // left: 25.w,
-    alignment: Alignment(0.0, -0.49),
-    child: Container(
-      width: 300,
-      height: 300,
-      child: Image.network(model.imagePath!,fit: BoxFit.fill,width: 300,height: 300,),
+    // top: 20.h,
+    // left: 30.w,
+    alignment: Alignment.center,
+    child: Padding(
+      padding: EdgeInsets.only(bottom: 25.h),
+      child: Container(
+        width: context.isPortrait ? 350.dpValue(context) : 500.dpValue(context),
+        height: context.isPortrait? 350.dpValue(context):  500.dpValue(context),
+        child: Image.network(model.imagePath!,fit: BoxFit.fill,width: 50.w,height: 50.w,),
+      ),
     ),
   );
 }

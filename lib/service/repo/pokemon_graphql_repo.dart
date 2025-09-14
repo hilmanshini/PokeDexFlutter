@@ -122,7 +122,7 @@ class PokemonGraphqlRepo implements PokemonRepo {
     'normal': Colors.brown[400]!.toARGB32(),
     'fire': Colors.redAccent.toARGB32(),
     'water': Colors.blueAccent.toARGB32(),
-    'electric': Colors.yellowAccent.toARGB32(),
+    'electric': Color(0xFFFDD835).toARGB32(),
     'grass': Colors.greenAccent.toARGB32(),
     'ice': Colors.cyanAccent.toARGB32(),
     'fighting': Colors.orangeAccent.toARGB32(),

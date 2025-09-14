@@ -13,10 +13,4 @@ class PokemonHomeScreenViewmodel extends BaseViewModel{
 
 
 
-  void loadSync(){
-    getPokemonList(page.value).listen((event) {
-      data.value = event;
-      notifyListeners();
-    });
-  }
 }

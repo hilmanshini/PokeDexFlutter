@@ -16,7 +16,6 @@ class GetPokemonList {
 
   Stream<Result<List<PokemonModel>>> call<T>(int page) =>
       usecaseUi((controller, sink) async {
-        sleep(Duration(seconds: 3));
         sink.add(Loading());
         var list = await repo.getPokemonList(page);
         sink.add(list);

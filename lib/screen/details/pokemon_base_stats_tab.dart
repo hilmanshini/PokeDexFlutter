@@ -22,7 +22,7 @@ class PokemonBaseStatsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: EdgeInsets.only(left: 5.w, right:5.w,top: 5.w),
+    padding: EdgeInsets.only(left: 5.w, right:5.w,top: 1.h),
     child: ListView(
       children: [
         rowItem("HP", model.hp!),
@@ -32,6 +32,7 @@ class PokemonBaseStatsTab extends StatelessWidget {
         rowItem("Sp Def", model.spDef!),
         rowItem("Speed", model.speed!),
         rowItem("Total", model.totalStats(),visibleProgress: false),
+        SizedBox(height: 5.h)
         // sectionTitle("Type Defenses"),
         // captionTitle("asdasd asdasd \n \n \n asda dasd asd"),
       ],

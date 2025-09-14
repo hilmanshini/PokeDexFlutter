@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pokemon2/screen/home/pokemon_home_screen_card.dart';
 import 'package:pokemon2/screen/home/pokemon_home_screen_viewmodel.dart';
+import 'package:pokemon2/service/common/loading_widget.dart';
 import 'package:pokemon2/service/model/pokemon_model.dart';
+import 'package:pokemon2/utils/ext.dart';
 import 'package:sizer/sizer.dart';
 
 class PokeGrid extends StatefulWidget {
@@ -17,16 +19,21 @@ class PokeGrid extends StatefulWidget {
 class _PokeGrid extends State<PokeGrid> {
   PagingState<int, PokemonModel> _pagingState = PagingState();
 
-  void fetch(){
-    widget.viewModel.getPokemonList(widget.viewModel.page.value).listen((event) {
+  void fetch() {
+    setState(() {
+      _pagingState = _pagingState.copyWith(isLoading: true, error: null);
+    });
+    widget.viewModel.getPokemonList(widget.viewModel.page.value).listen((
+      event,
+    ) {
       // if (!_pagingState.hasNextPage || _pagingState.isLoading) return;
       var result = event;
       if (result.isLoading()) {
         _pagingState = _pagingState.copyWith(isLoading: true, error: null);
       } else if (result.isSucceed()) {
         var prevKey = widget.viewModel.page.value;
-        widget.viewModel.page.value = widget.viewModel.page.value+1;
-        widget.viewModel.page.value = widget.viewModel.page.value ;
+        widget.viewModel.page.value = widget.viewModel.page.value + 1;
+        widget.viewModel.page.value = widget.viewModel.page.value;
         var ends = result.getData().isEmpty;
         setState(() {
           _pagingState = _pagingState.copyWith(
@@ -91,20 +98,53 @@ class _PokeGrid extends State<PokeGrid> {
     child: PagedGridView<int, PokemonModel>(
       state: _pagingState,
       fetchNextPage: () => fetch(),
+      showNewPageErrorIndicatorAsGridChild: false,
+      showNewPageProgressIndicatorAsGridChild: false,
+      showNoMoreItemsIndicatorAsGridChild: false,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
-        childAspectRatio: 0.2.w,
+        childAspectRatio: context.isPortrait ? 0.3.w : 0.2.w,
       ),
+
       builderDelegate: PagedChildBuilderDelegate<PokemonModel>(
         itemBuilder: (context, item, index) => PokemonHomeScreenCard(item),
-        firstPageErrorIndicatorBuilder: (context) =>
-            const Center(child: Text('Error loading data')),
-        noItemsFoundIndicatorBuilder: (context) =>
-            const Center(child: Text('No items found')),
+        firstPageErrorIndicatorBuilder: (context) => SizedBox.expand(
+          child: InkWell(
+            onTap: () => fetch(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              // ✅ center vertikal
+              crossAxisAlignment: CrossAxisAlignment.center,
+              // ✅ center horizontal
+              children: const [Text('Error loading data, tap here to retry')],
+            ),
+          ),
+        ),
+        noItemsFoundIndicatorBuilder: (context) => SizedBox.expand(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            // ✅ center vertikal
+            crossAxisAlignment: CrossAxisAlignment.center,
+            // ✅ center horizontal
+            children: const [Text('No Data Found')],
+          ),
+        ),
+        newPageErrorIndicatorBuilder: (context) => SizedBox.expand(
+          child: InkWell(
+            onTap: () => fetch(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              // ✅ center vertikal
+              crossAxisAlignment: CrossAxisAlignment.center,
+              // ✅ center horizontal
+              children: const [Text('Error loading data, tap here to retry')],
+            ),
+          ),
+        ),
         newPageProgressIndicatorBuilder: (context) =>
-            const Center(child: CircularProgressIndicator()),
+            Center(child: Column(children: [LoadingWidget()])),
       ),
       padding: const EdgeInsets.all(8),
     ),

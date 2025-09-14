@@ -23,7 +23,7 @@ class GraphQLService {
 
     // 🔥 Tambahkan logger interceptor di sini
     dio.interceptors.add(LoggerInterceptor());
-    final dioHttpClient = DioHttpClient(dio);
+    final dioHttpClient = DioHttpClient(dio,timeoutInSeconds);
 
     final HttpLink httpLink = HttpLink(
       endpoint,

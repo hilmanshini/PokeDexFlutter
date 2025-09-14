@@ -58,6 +58,7 @@ class PokemonAboutTab extends StatelessWidget {
           genderRow(model.maleBreedPercentage!, model.femaleBreedPercentage!),
           rowItem("Egg Groups", model.eggGroup!.capitalize()),
           rowItem("Egg Cycle", model.eggCycle!.capitalize()),
+          SizedBox(height: 5.h)
         ],
       ),
     ),

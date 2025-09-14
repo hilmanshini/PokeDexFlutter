@@ -9,7 +9,9 @@ import 'package:pokemon2/service/usecase/get_pokemon_list.dart'
 void registerDependencyInjection() {
   GetIt.instance.registerLazySingleton(
         () =>
-        GraphQLService(endpoint: "http://127.0.0.1:3007", timeoutInSeconds: 60),
+        GraphQLService(endpoint: "https://beta.pokeapi.co/graphql/v1beta", timeoutInSeconds: 60),
+    // GraphQLService(endpoint: "http://127.0.0.1:3007", timeoutInSeconds: 60),
+
   );
 
   GetIt.instance.registerLazySingleton(

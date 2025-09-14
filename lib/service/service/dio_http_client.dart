@@ -5,8 +5,9 @@ import 'package:dio/dio.dart';
 
 class DioHttpClient extends http.BaseClient {
   final Dio dio;
+  final int timeoutInSeconds;
 
-  DioHttpClient(this.dio);
+  DioHttpClient(this.dio, this.timeoutInSeconds);
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
